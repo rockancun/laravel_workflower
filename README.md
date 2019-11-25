@@ -1,6 +1,10 @@
 # Workflower with laravel. A Bussines Process Implementation with PHP
 
-[TOC]
+## Table of Contents
+
+- [Introduccion](#introduccion).
+- [Cursivas](#the-workflow-diagram).
+- [Screenshots](#screenshots)
 
 ## Introduction
 
@@ -12,7 +16,7 @@ I used https://github.com/77web/workflower-bundle-playground example as a basis.
 
 The bpmn file can be viewed and edited with comunda modeler.
 
-## The workflow example
+## The workflow diagram
 
 ![documentation/img/pullrequest_process.png](documentation/img/pullrequest_process.png)
 
