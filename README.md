@@ -48,7 +48,7 @@ $pullRequestWorkflow = new PullRequestWorkflow();
 $operationRunner = new MergePullRequestOperationRunner();
 $process = new Process($pullRequestWorkflow, $repository, $operationRunner);
 ```
-We set the instance in the Caseuse class and pass the Pullrequest instance in the run method
+We set the instance in the Usecase class and pass the Pullrequest instance in the run method.
 
 ```php
 $usecase = new CreatePullRequestUsecase();
