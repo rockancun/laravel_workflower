@@ -12,9 +12,7 @@
 
 This project is an example of https://github.com/phpmentors-jp/workflower  BPMN 2.0 workflow engine and Laravel 5.8 Framework integration.
 
-I used https://github.com/77web/workflower-bundle-playground example as a basis.
-
-**IMPORTANT!!!** The phpmentor's source code has a fatal bug in the workflow deserializer method. That is the reason why i use the fork https://packagist.org/packages/tecnoenvio-koala/workflower.
+I used https://github.com/77web/workflower-bundle-playground example as basis.
 
 The bpmn file can be viewed and edited with comunda modeler. The service tasks are not supported by the visual editor but you can edit directly in the source code.
 
@@ -32,7 +30,7 @@ Run composer install and and php artisan migrate command.
 
 The class Process does the magic and we focus in this.
 
-This class needs three class for work.
+This class needs three class to work.
 
 1. A **WorkItemContextInterface** implementation (**PullRequestWorkflow**).  This class has the workflow bpmn file name saved in the storage/app/process path.
 2. A **Bpmn2WorkflowRepository** implementation (**WorkflowRepository**). The phpmentors-jp/workflower has an implementation but is useless for laravel projects.
