@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" id="Definitions_1" targetNamespace="http://bpmn.io/schema/bpmn">
+  <bpmn:collaboration id="Collaboration_1u3914w">
+    <bpmn:participant id="Participant_04orbzh" processRef="Process_1" />
+  </bpmn:collaboration>
+  <bpmn:message id="dummy" />
+  <bpmn:interface id="Interface_1" name="Interface 1">
+    <bpmn:operation id="pull_request_process.merge_pr" name="pull_request_process.merge_pr">
+      <bpmn:inMessageRef>dummy</bpmn:inMessageRef>
+    </bpmn:operation>
+  </bpmn:interface>
+  <bpmn:process id="Process_1" isExecutable="false">
+    <bpmn:laneSet>
+      <bpmn:lane id="Lane_dev" name="dev">
+        <bpmn:flowNodeRef>StartEvent_1</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>create-pr</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>fix-pr</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_reviewer" name="reviewer">
+        <bpmn:flowNodeRef>review-pr</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>merge-check</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>merge-pr</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>EndEvent_0fiy5ns</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="StartEvent_1">
+      <bpmn:outgoing>SequenceFlow_1t1tfym</bpmn:outgoing>
+    </bpmn:startEvent>
+    <bpmn:task id="create-pr" name="create PR">
+      <bpmn:incoming>SequenceFlow_1t1tfym</bpmn:incoming>
+      <bpmn:outgoing>request-review</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="SequenceFlow_1t1tfym" sourceRef="StartEvent_1" targetRef="create-pr" />
+    <bpmn:sequenceFlow id="request-review" name="request a review" sourceRef="create-pr" targetRef="review-pr" />
+    <bpmn:sequenceFlow id="SequenceFlow_1donic1" sourceRef="review-pr" targetRef="merge-check" />
+    <bpmn:sequenceFlow id="merge-check-ok" name="ok" sourceRef="merge-check" targetRef="merge-pr">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">approved == true</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:sequenceFlow id="merge-check-ng" name="ng" sourceRef="merge-check" targetRef="fix-pr">
+      <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">approved == false</bpmn:conditionExpression>
+    </bpmn:sequenceFlow>
+    <bpmn:task id="fix-pr" name="fix PR">
+      <bpmn:incoming>merge-check-ng</bpmn:incoming>
+      <bpmn:outgoing>re-review-req</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:sequenceFlow id="re-review-req" name="request re-review" sourceRef="fix-pr" targetRef="review-pr" />
+    <bpmn:task id="review-pr" name="review PR">
+      <bpmn:incoming>request-review</bpmn:incoming>
+      <bpmn:incoming>re-review-req</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_1donic1</bpmn:outgoing>
+    </bpmn:task>
+    <bpmn:exclusiveGateway id="merge-check" name="check mergeability">
+      <bpmn:incoming>SequenceFlow_1donic1</bpmn:incoming>
+      <bpmn:outgoing>merge-check-ok</bpmn:outgoing>
+      <bpmn:outgoing>merge-check-ng</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:serviceTask id="merge-pr" name="merge PR" operationRef="pull_request_process.merge_pr">
+      <bpmn:incoming>merge-check-ok</bpmn:incoming>
+      <bpmn:outgoing>SequenceFlow_027p1yv</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:endEvent id="EndEvent_0fiy5ns">
+      <bpmn:incoming>SequenceFlow_027p1yv</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="SequenceFlow_027p1yv" sourceRef="merge-pr" targetRef="EndEvent_0fiy5ns" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="BPMNDiagram_1">
+    <bpmndi:BPMNPlane id="BPMNPlane_1" bpmnElement="Collaboration_1u3914w">
+      <bpmndi:BPMNShape id="Participant_04orbzh_di" bpmnElement="Participant_04orbzh">
+        <dc:Bounds x="123" y="82" width="712" height="407" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="_BPMNShape_StartEvent_2" bpmnElement="StartEvent_1">
+        <dc:Bounds x="190" y="130" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="163" y="166" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_1goawcc_di" bpmnElement="Lane_dev">
+        <dc:Bounds x="153" y="82" width="682" height="125" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_16gwvxw_di" bpmnElement="Lane_reviewer">
+        <dc:Bounds x="153" y="207" width="682" height="282" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Task_1siiq5j_di" bpmnElement="create-pr">
+        <dc:Bounds x="273.5756345177665" y="108" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1t1tfym_di" bpmnElement="SequenceFlow_1t1tfym">
+        <di:waypoint xsi:type="dc:Point" x="226" y="148" />
+        <di:waypoint xsi:type="dc:Point" x="274" y="148" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="205" y="138" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_1mzuvtz_di" bpmnElement="review-pr">
+        <dc:Bounds x="274" y="336.848730964467" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_0oo09mw_di" bpmnElement="request-review">
+        <di:waypoint xsi:type="dc:Point" x="324" y="188" />
+        <di:waypoint xsi:type="dc:Point" x="324" y="337" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="279" y="203" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ExclusiveGateway_0iqn5h1_di" bpmnElement="merge-check" isMarkerVisible="true">
+        <dc:Bounds x="494.5756345177665" y="377" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="474.5756345177665" y="427" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1donic1_di" bpmnElement="SequenceFlow_1donic1">
+        <di:waypoint xsi:type="dc:Point" x="374" y="377" />
+        <di:waypoint xsi:type="dc:Point" x="434" y="377" />
+        <di:waypoint xsi:type="dc:Point" x="434" y="402" />
+        <di:waypoint xsi:type="dc:Point" x="495" y="402" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="354" y="268" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0sqtnxw_di" bpmnElement="merge-check-ok">
+        <di:waypoint xsi:type="dc:Point" x="545" y="402" />
+        <di:waypoint xsi:type="dc:Point" x="610" y="402" />
+        <di:waypoint xsi:type="dc:Point" x="610" y="391" />
+        <di:waypoint xsi:type="dc:Point" x="675" y="391" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="549.5" y="392" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="Task_1ppmzwu_di" bpmnElement="fix-pr">
+        <dc:Bounds x="577.5756345177665" y="97" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_1lm490f_di" bpmnElement="merge-check-ng">
+        <di:waypoint xsi:type="dc:Point" x="520" y="377" />
+        <di:waypoint xsi:type="dc:Point" x="520" y="221" />
+        <di:waypoint xsi:type="dc:Point" x="628" y="221" />
+        <di:waypoint xsi:type="dc:Point" x="628" y="177" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="490.5" y="243" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="SequenceFlow_0togtyy_di" bpmnElement="re-review-req">
+        <di:waypoint xsi:type="dc:Point" x="578" y="137" />
+        <di:waypoint xsi:type="dc:Point" x="476" y="137" />
+        <di:waypoint xsi:type="dc:Point" x="412" y="284" />
+        <di:waypoint xsi:type="dc:Point" x="358" y="337" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="431" y="197.5" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNShape id="ServiceTask_0xbn4p5_di" bpmnElement="merge-pr">
+        <dc:Bounds x="674.5756345177665" y="351" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="EndEvent_0fiy5ns_di" bpmnElement="EndEvent_0fiy5ns">
+        <dc:Bounds x="697" y="265" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="670" y="301" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="SequenceFlow_027p1yv_di" bpmnElement="SequenceFlow_027p1yv">
+        <di:waypoint xsi:type="dc:Point" x="725" y="351" />
+        <di:waypoint xsi:type="dc:Point" x="725" y="326" />
+        <di:waypoint xsi:type="dc:Point" x="715" y="326" />
+        <di:waypoint xsi:type="dc:Point" x="715" y="301" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="675" y="316" width="90" height="20" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>
