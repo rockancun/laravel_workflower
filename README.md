@@ -14,7 +14,7 @@ This project is an example of https://github.com/phpmentors-jp/workflower  BPMN 
 
 I used https://github.com/77web/workflower-bundle-playground example as basis.
 
-The bpmn file can be viewed and edited with comunda modeler. The service tasks are not supported by the visual editor but you can edit directly in the source code.
+The bpmn file can be viewed and edited with Camunda Modeler. The service tasks are not supported by the visual editor but you can edit directly in the source code.
 
 ## Installation
 
